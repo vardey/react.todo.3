@@ -1,0 +1,13 @@
+.deleteAllBtn {
+    background-color: #EB5757;
+    color: #FFFFFF;
+    border-radius: 4px;
+    width: 124px;
+    height: 40px;
+}
+
+#deleteAllDiv {
+    display: flex;
+    justify-content: right;
+    padding-top: 15px;
+}
