@@ -1,17 +1,14 @@
 import { TABS } from "../const";
 import DeleteIcon from "@mui/icons-material/Delete";
 import "./TasksList.css";
+import { deleteTaskById, updateTask, deleteAllCompletedTasks } from "../redux/action";
+import { useSelector, useDispatch } from "react-redux";
 
 const TasksList = (props) => {
-  const {
-    tasksList,
-    deleteTaskById,
-    updateTask,
-    currentTab,
-    deleteAllCompletedTasks,
-  } = props;
-  
-  console.log({ tasksList, currentTab });
+  const { currentTab } = props;
+  const tasksList = useSelector((state)=>state.todoReducer) || [];
+
+  const dispatch = useDispatch();
 
   let filteredTasksList = [];
   if (tasksList && tasksList.length) {
@@ -27,7 +24,6 @@ const TasksList = (props) => {
     });
   }
 
- 
   return (
     <div>
       <div id="tasksList">
@@ -45,7 +41,9 @@ const TasksList = (props) => {
                 <input
                   onChange={(e) => {
                     console.log("checkbox clicked", e.target.checked);
-                    updateTask({ ...task, isCompleted: e.target.checked });
+                    dispatch(
+                      updateTask({ ...task, isCompleted: e.target.checked })
+                    );
                     // setTaskCompleteById(parseInt(e.currentTarget.id, 10));
                   }}
                   type="checkbox"
@@ -65,20 +63,29 @@ const TasksList = (props) => {
                 </label>
 
                 {task.isCompleted && currentTab === TABS.COMPLETED && (
-                  <DeleteIcon onClick={() => deleteTaskById(task.id)} />
+                  <DeleteIcon
+                    onClick={() => dispatch(deleteTaskById(task.id))}
+                  />
                 )}
               </div>
             )
           );
         })}
       </div>
-      {currentTab === TABS.COMPLETED && filteredTasksList && filteredTasksList.length > 0 && (
-        <div id="deleteAllDiv">
-          <button className="deleteAllBtn" onClick={deleteAllCompletedTasks}>
-            Delete All
-          </button>
-        </div>
-      )}
+      {currentTab === TABS.COMPLETED &&
+        filteredTasksList &&
+        filteredTasksList.length > 0 && (
+          <div id="deleteAllDiv">
+            <button
+              className="deleteAllBtn"
+              onClick={() => {
+                dispatch(deleteAllCompletedTasks());
+              }}
+            >
+              Delete All
+            </button>
+          </div>
+        )}
     </div>
   );
 };

@@ -1,7 +1,11 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addTask } from "../redux/action";
 
 const AddTask = (props) => {
+  const dispatch = useDispatch();
   const [taskContent, setTaskContent] = useState("");
+
   const { isAddTaskVisible } = props;
 
   const captureTaskContent = (e) => {
@@ -26,11 +30,13 @@ const AddTask = (props) => {
               alert("Please enter a task!");
               return;
             }
-            props.addTask({
-              id: Date.now(),
-              content: taskContent,
-              isCompleted: false,
-            });
+            dispatch(
+              addTask({
+                id: Date.now(),
+                content: taskContent,
+                isCompleted: false,
+              })
+            );
             setTaskContent("");
           }}
         >
